@@ -1,203 +1,306 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>NEON DROP ULTRA</title>
 
 <style>
-body{
+
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:sans-serif;
-background:#0f172a;
+}
+
+body{
+background:
+radial-gradient(circle at top,#311060,#090014 70%);
 color:white;
-overflow:hidden;
+min-height:100vh;
+overflow-x:hidden;
 }
 
-#game{
-position:relative;
-width:100vw;
-height:100vh;
-background:linear-gradient(#0f172a,#020617);
-overflow:hidden;
+.app{
+max-width:430px;
+margin:auto;
+padding:20px 16px 120px;
 }
 
-.player{
-position:absolute;
-bottom:40px;
-left:50%;
-transform:translateX(-50%);
-width:70px;
-height:70px;
-background:cyan;
-border-radius:20px;
-box-shadow:0 0 25px cyan;
+.logo{
+text-align:center;
+margin-top:30px;
 }
 
-.enemy{
-position:absolute;
-width:50px;
-height:50px;
-background:#ff0055;
-border-radius:14px;
-box-shadow:0 0 20px #ff0055;
-}
-
-.score{
-position:absolute;
-top:20px;
-left:20px;
-font-size:28px;
-font-weight:bold;
+.logo img{
+width:120px;
+filter:drop-shadow(0 0 25px #00e5ff);
 }
 
 .title{
-position:absolute;
-top:20px;
-right:20px;
-font-size:22px;
-color:cyan;
+font-size:58px;
+font-weight:bold;
+line-height:0.95;
+margin-top:10px;
+text-shadow:0 0 20px #ff00ff;
 }
 
-.start{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-padding:20px 40px;
-font-size:24px;
+.title span{
+color:#ffd54a;
+}
+
+.subtitle{
+margin-top:14px;
+font-size:18px;
+opacity:0.9;
+}
+
+.main-btn{
+width:100%;
+height:74px;
 border:none;
-border-radius:20px;
-background:cyan;
-color:black;
+border-radius:26px;
+margin-top:22px;
+font-size:32px;
+font-weight:bold;
+color:white;
+background:
+linear-gradient(90deg,#ff00ff,#00d4ff);
+box-shadow:
+0 0 25px #ff00ff88,
+0 0 35px #00d4ff55;
+}
+
+.card{
+margin-top:26px;
+padding:22px;
+border-radius:28px;
+background:
+linear-gradient(180deg,#1a0938,#120020);
+border:2px solid #00d4ff55;
+box-shadow:0 0 25px #00d4ff22;
+}
+
+.card-title{
+font-size:34px;
+font-weight:bold;
+text-align:center;
+margin-bottom:18px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:6px;
+margin-top:18px;
+}
+
+.block{
+aspect-ratio:1;
+border-radius:10px;
+box-shadow:0 0 15px currentColor;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{
+transform:scale(1);
+}
+to{
+transform:scale(1.08);
+}
+}
+
+.c1{background:#00e5ff;color:#00e5ff;}
+.c2{background:#ff00ff;color:#ff00ff;}
+.c3{background:#ffee58;color:#ffee58;}
+.c4{background:#69f0ae;color:#69f0ae;}
+.c5{background:#7c4dff;color:#7c4dff;}
+.c6{background:#ff5252;color:#ff5252;}
+
+.bottom-nav{
+position:fixed;
+bottom:18px;
+left:50%;
+transform:translateX(-50%);
+width:95%;
+max-width:420px;
+height:82px;
+border-radius:28px;
+background:#070014ee;
+display:flex;
+justify-content:space-around;
+align-items:center;
+backdrop-filter:blur(12px);
+border:1px solid #00d4ff44;
+}
+
+.nav-btn{
+text-align:center;
+font-size:14px;
+color:white;
+}
+
+.nav-btn div{
+font-size:32px;
+margin-bottom:4px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:10px;
+margin-bottom:20px;
+}
+
+.gems{
+padding:10px 18px;
+border-radius:999px;
+background:#120022;
+border:1px solid #ff00ff55;
+box-shadow:0 0 15px #ff00ff33;
 font-weight:bold;
 }
 
-.gameover{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-font-size:42px;
-display:none;
-color:#ff0055;
+.energy{
+padding:10px 18px;
+border-radius:999px;
+background:#001b2a;
+border:1px solid #00d4ff55;
+box-shadow:0 0 15px #00d4ff33;
 font-weight:bold;
 }
+
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<div class="app">
 
-<div class="score">
-SCORE: <span id="score">0</span>
+<div class="topbar">
+
+<div class="gems">
+💎 12,345
 </div>
+
+<div class="energy">
+⚡ 5 / 5
+</div>
+
+</div>
+
+<div class="logo">
+
+<div style="font-size:110px;">💎</div>
 
 <div class="title">
-NEON DROP ULTRA
+NEON<br>
+DROP<br>
+<span>ULTRA</span>
 </div>
 
-<div class="player" id="player"></div>
+<div class="subtitle">
+落として、そろえて、超爽快。
+</div>
 
-<button class="start" id="startBtn">
-START
+</div>
+
+<button class="main-btn" onclick="startGame()">
+▶ ゲームスタート
 </button>
 
-<div class="gameover" id="gameover">
-GAME OVER
+<button class="main-btn" onclick="openRanking()">
+🏆 ランキング
+</button>
+
+<button class="main-btn" onclick="openGacha()">
+🎰 ガチャ
+</button>
+
+<div class="card">
+
+<div class="card-title">
+PLAY FIELD
+</div>
+
+<div class="grid">
+
+<div class="block c1"></div>
+<div class="block c2"></div>
+<div class="block c3"></div>
+<div class="block c4"></div>
+<div class="block c5"></div>
+<div class="block c1"></div>
+
+<div class="block c6"></div>
+<div class="block c3"></div>
+<div class="block c2"></div>
+<div class="block c5"></div>
+<div class="block c4"></div>
+<div class="block c6"></div>
+
+<div class="block c1"></div>
+<div class="block c4"></div>
+<div class="block c5"></div>
+<div class="block c3"></div>
+<div class="block c2"></div>
+<div class="block c1"></div>
+
+<div class="block c6"></div>
+<div class="block c2"></div>
+<div class="block c3"></div>
+<div class="block c1"></div>
+<div class="block c4"></div>
+<div class="block c5"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="bottom-nav">
+
+<div class="nav-btn">
+<div>🏠</div>
+ホーム
+</div>
+
+<div class="nav-btn">
+<div>🎮</div>
+プレイ
+</div>
+
+<div class="nav-btn">
+<div>🎰</div>
+ガチャ
+</div>
+
+<div class="nav-btn">
+<div>🏆</div>
+ランク
 </div>
 
 </div>
 
 <script>
 
-const game = document.getElementById("game");
-const player = document.getElementById("player");
-const scoreText = document.getElementById("score");
-const startBtn = document.getElementById("startBtn");
-const gameover = document.getElementById("gameover");
-
-let playerX = window.innerWidth / 2;
-let score = 0;
-let playing = false;
-
-document.addEventListener("touchmove",(e)=>{
-if(!playing)return;
-
-playerX = e.touches[0].clientX;
-player.style.left = playerX + "px";
-});
-
-function createEnemy(){
-
-const enemy = document.createElement("div");
-enemy.classList.add("enemy");
-
-let x = Math.random() * (window.innerWidth - 50);
-
-enemy.style.left = x + "px";
-enemy.style.top = "-60px";
-
-game.appendChild(enemy);
-
-let y = -60;
-
-const fall = setInterval(()=>{
-
-y += 6;
-enemy.style.top = y + "px";
-
-const playerRect = player.getBoundingClientRect();
-const enemyRect = enemy.getBoundingClientRect();
-
-if(
-enemyRect.left < playerRect.right &&
-enemyRect.right > playerRect.left &&
-enemyRect.top < playerRect.bottom &&
-enemyRect.bottom > playerRect.top
-){
-clearInterval(fall);
-playing = false;
-gameover.style.display = "block";
+function startGame(){
+alert("ゲーム画面へ！");
 }
 
-if(y > window.innerHeight){
-clearInterval(fall);
-enemy.remove();
-
-if(playing){
-score++;
-scoreText.innerText = score;
-}
+function openRanking(){
+alert("ランキング！");
 }
 
-},20);
-
+function openGacha(){
+alert("ガチャ！");
 }
-
-let enemyLoop;
-
-startBtn.addEventListener("click",()=>{
-
-score = 0;
-scoreText.innerText = score;
-playing = true;
-
-startBtn.style.display = "none";
-gameover.style.display = "none";
-
-enemyLoop = setInterval(()=>{
-
-if(playing){
-createEnemy();
-}
-
-},700);
-
-});
 
 </script>
 
 </body>
-	</html>
+</html>
