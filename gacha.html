@@ -348,6 +348,8 @@ onclick="pull10Gacha()">
 
 </div>
 
+<div id="tenResult"></div>
+
 <div class="result" id="result">
 
 <div class="result-rank">
@@ -404,7 +406,27 @@ diamonds -= 500;
 
 document.getElementById("diamondCount").innerHTML = diamonds;
 
-alert("10連ガチャ！！🔥");
+const tenResult =
+document.getElementById("tenResult");
+
+tenResult.innerHTML = "";
+
+for(let i = 0; i < 10; i++){
+
+const rand = Math.random();
+
+let rank = "R";
+
+if(rand < 0.03){
+rank = "SSR";
+}
+else if(rand < 0.5){
+rank = "SR";
+}
+
+tenResult.innerHTML += `<div class="slot">${rank}</div>`;
+
+}
 
 }
 
