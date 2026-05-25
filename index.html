@@ -1,148 +1,203 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NEON DROP ULTRA</title>
-  <style>
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    body{
-      margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:radial-gradient(circle at top,#31105d,#080013 70%);
-      color:white;
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-    .app{
-      max-width:430px;
-      margin:auto;
-      min-height:100vh;
-      padding:22px 16px 90px;
-      text-align:center;
-    }
-    .cube{
-      font-size:70px;
-      filter:drop-shadow(0 0 25px #00e5ff);
-      margin-top:20px;
-    }
-    h1{
-      font-size:44px;
-      line-height:.95;
-      margin:10px 0;
-      letter-spacing:1px;
-      text-shadow:0 0 20px #ff00ff,0 0 30px #00e5ff;
-    }
-    h1 span{
-      display:block;
-      color:#ffd54a;
-      text-shadow:0 0 20px #ffd54a;
-    }
-    .sub{
-      color:#d7c8ff;
-      font-weight:700;
-      margin-bottom:24px;
-    }
-    .panel{
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(0,229,255,.35);
-      border-radius:24px;
-      padding:16px;
-      margin-top:14px;
-      box-shadow:0 0 28px rgba(0,229,255,.18);
-      backdrop-filter:blur(12px);
-    }
-    .btn{
-      width:100%;
-      border:none;
-      border-radius:18px;
-      padding:17px;
-      margin-top:12px;
-      font-size:19px;
-      font-weight:900;
-      color:white;
-      background:linear-gradient(90deg,#ff00ff,#00c3ff);
-      box-shadow:0 0 20px rgba(255,0,255,.35);
-    }
-    .board{
-      display:grid;
-      grid-template-columns:repeat(6,1fr);
-      gap:7px;
-      padding:10px;
-      margin-top:16px;
-      border-radius:20px;
-      background:rgba(0,0,0,.35);
-    }
-    .tile{
-      aspect-ratio:1;
-      border-radius:12px;
-      box-shadow:0 0 14px currentColor;
-    }
-    .bottom{
-      position:fixed;
-      left:50%;
-      bottom:14px;
-      transform:translateX(-50%);
-      width:min(92%,430px);
-      height:66px;
-      border-radius:24px;
-      background:rgba(10,0,25,.92);
-      border:1px solid rgba(255,0,255,.4);
-      display:flex;
-      align-items:center;
-      justify-content:space-around;
-      box-shadow:0 0 25px rgba(255,0,255,.25);
-    }
-    .nav{
-      font-size:12px;
-      color:#ddd;
-      font-weight:800;
-    }
-    .nav span{
-      display:block;
-      font-size:25px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON DROP ULTRA</title>
+
+<style>
+body{
+margin:0;
+font-family:sans-serif;
+background:#0f172a;
+color:white;
+overflow:hidden;
+}
+
+#game{
+position:relative;
+width:100vw;
+height:100vh;
+background:linear-gradient(#0f172a,#020617);
+overflow:hidden;
+}
+
+.player{
+position:absolute;
+bottom:40px;
+left:50%;
+transform:translateX(-50%);
+width:70px;
+height:70px;
+background:cyan;
+border-radius:20px;
+box-shadow:0 0 25px cyan;
+}
+
+.enemy{
+position:absolute;
+width:50px;
+height:50px;
+background:#ff0055;
+border-radius:14px;
+box-shadow:0 0 20px #ff0055;
+}
+
+.score{
+position:absolute;
+top:20px;
+left:20px;
+font-size:28px;
+font-weight:bold;
+}
+
+.title{
+position:absolute;
+top:20px;
+right:20px;
+font-size:22px;
+color:cyan;
+}
+
+.start{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+padding:20px 40px;
+font-size:24px;
+border:none;
+border-radius:20px;
+background:cyan;
+color:black;
+font-weight:bold;
+}
+
+.gameover{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:42px;
+display:none;
+color:#ff0055;
+font-weight:bold;
+}
+</style>
 </head>
+
 <body>
-  <div class="app">
-    <div class="cube">💎</div>
-    <h1>NEON<br>DROP<span>ULTRA</span></h1>
-    <div class="sub">落として、そろえて、超爽快。</div>
 
-    <button class="btn">▶ ゲームスタート</button>
-    <button class="btn">🏆 ランキング</button>
-    <button class="btn">🎰 ガチャ</button>
+<div id="game">
 
-    <div class="panel">
-      <h2>PLAY FIELD</h2>
-      <div class="board" id="board"></div>
-    </div>
+<div class="score">
+SCORE: <span id="score">0</span>
+</div>
 
-    <div class="panel">
-      <h2>Firebase Connected</h2>
-      <p>GitHub Pages表示テスト成功版</p>
-    </div>
-  </div>
+<div class="title">
+NEON DROP ULTRA
+</div>
 
-  <div class="bottom">
-    <div class="nav"><span>🏠</span>ホーム</div>
-    <div class="nav"><span>💎</span>プレイ</div>
-    <div class="nav"><span>🎰</span>ガチャ</div>
-    <div class="nav"><span>🏆</span>ランク</div>
-  </div>
+<div class="player" id="player"></div>
 
-  <script>
-    const colors = ["#ff00ff","#00e5ff","#ffd54a","#39ff88","#8b5cff","#ff4b4b"];
-    const board = document.getElementById("board");
-    for(let i=0;i<36;i++){
-      const t=document.createElement("div");
-      t.className="tile";
-      const c=colors[Math.floor(Math.random()*colors.length)];
-      t.style.background=c;
-      t.style.color=c;
-      board.appendChild(t);
-    }
-  </script>
+<button class="start" id="startBtn">
+START
+</button>
+
+<div class="gameover" id="gameover">
+GAME OVER
+</div>
+
+</div>
+
+<script>
+
+const game = document.getElementById("game");
+const player = document.getElementById("player");
+const scoreText = document.getElementById("score");
+const startBtn = document.getElementById("startBtn");
+const gameover = document.getElementById("gameover");
+
+let playerX = window.innerWidth / 2;
+let score = 0;
+let playing = false;
+
+document.addEventListener("touchmove",(e)=>{
+if(!playing)return;
+
+playerX = e.touches[0].clientX;
+player.style.left = playerX + "px";
+});
+
+function createEnemy(){
+
+const enemy = document.createElement("div");
+enemy.classList.add("enemy");
+
+let x = Math.random() * (window.innerWidth - 50);
+
+enemy.style.left = x + "px";
+enemy.style.top = "-60px";
+
+game.appendChild(enemy);
+
+let y = -60;
+
+const fall = setInterval(()=>{
+
+y += 6;
+enemy.style.top = y + "px";
+
+const playerRect = player.getBoundingClientRect();
+const enemyRect = enemy.getBoundingClientRect();
+
+if(
+enemyRect.left < playerRect.right &&
+enemyRect.right > playerRect.left &&
+enemyRect.top < playerRect.bottom &&
+enemyRect.bottom > playerRect.top
+){
+clearInterval(fall);
+playing = false;
+gameover.style.display = "block";
+}
+
+if(y > window.innerHeight){
+clearInterval(fall);
+enemy.remove();
+
+if(playing){
+score++;
+scoreText.innerText = score;
+}
+}
+
+},20);
+
+}
+
+let enemyLoop;
+
+startBtn.addEventListener("click",()=>{
+
+score = 0;
+scoreText.innerText = score;
+playing = true;
+
+startBtn.style.display = "none";
+gameover.style.display = "none";
+
+enemyLoop = setInterval(()=>{
+
+if(playing){
+createEnemy();
+}
+
+},700);
+
+});
+
+</script>
+
 </body>
-</html>
+	</html>
