@@ -248,6 +248,45 @@ transform:scale(1);
 100%{transform:translateX(0);}
 
 }
+
+#slotArea{
+display:flex;
+justify-content:center;
+gap:20px;
+margin-top:30px;
+}
+
+.slot{
+width:90px;
+height:90px;
+border-radius:20px;
+background:#120022;
+border:3px solid cyan;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:34px;
+font-weight:bold;
+box-shadow:0 0 20px cyan;
+animation:slotGlow 1s infinite alternate;
+}
+
+@keyframes slotGlow{
+0%{
+transform:scale(1);
+}
+100%{
+transform:scale(1.08);
+}
+}
+
+0%{transform:translateX(0);}
+25%{transform:translateX(-6px);}
+50%{transform:translateX(6px);}
+75%{transform:translateX(-6px);}
+100%{transform:translateX(0);}
+
+}
 </style>
 </head>
 
@@ -289,6 +328,16 @@ SSR確率 3%
 </button>
 
 <div class="result" id="result">
+
+<div id="slotArea">
+
+<div class="slot" id="slot1">?</div>
+<div class="slot" id="slot2">?</div>
+<div class="slot" id="slot3">?</div>
+
+</div>
+
+</div>
 
 <div class="result-rank">
 READY
@@ -342,9 +391,68 @@ setTimeout(()=>{
 flash.classList.remove("active");
 },500);
 
+const slot1 = document.getElementById("slot1");
+const slot2 = document.getElementById("slot2");
+const slot3 = document.getElementById("slot3");
+
+const marks = ["7","★","◆","⚡","👑"];
+
+let spin = setInterval(()=>{
+
+slot1.innerHTML =
+marks[Math.floor(Math.random()*marks.length)];
+
+slot2.innerHTML =
+marks[Math.floor(Math.random()*marks.length)];
+
+slot3.innerHTML =
+marks[Math.floor(Math.random()*marks.length)];
+
+},100);
+
+setTimeout(()=>{
+clearInterval(spin);
+},1500);
+
 const rand = Math.random();
 
 if(rand < 0.03){
+
+slot1.innerHTML = "SSR";
+slot2.innerHTML = "SSR";
+slot3.innerHTML = "SSR";
+
+document.body.style.animation =
+"rainbowFlash 1s infinite";
+
+result.style.animation =
+"shake 0.4s infinite";
+
+}
+else if(rand < 0.20){
+
+slot1.innerHTML = "SR";
+slot2.innerHTML = "SR";
+slot3.innerHTML = "SR";
+
+document.body.style.background =
+"linear-gradient(#3a0000,#ff0000)";
+
+result.style.animation =
+"shake 0.5s infinite";
+
+}
+else{
+
+slot1.innerHTML = "R";
+slot2.innerHTML = "R";
+slot3.innerHTML = "R";
+
+}
+
+}
+
+},100);
 
 document.body.style.animation =
 "rainbowFlash 1s infinite";
