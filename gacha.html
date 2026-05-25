@@ -320,8 +320,17 @@ SSR確率 3%
 
 </div>
 
-<button class="gacha-btn" onclick="pullGacha()">
+<button class="gacha-btn"
+onclick="pullGacha()">
+
 🎰 ガチャを引く
+
+</button>
+<button class="gacha-btn ten-btn"
+onclick="pull10Gacha()">
+
+🔥 10連ガチャ
+
 </button>
 
 <div id="slotArea">
@@ -373,6 +382,24 @@ READY
 <script>
 
 let diamonds = 500;
+
+function pull10Gacha(){
+
+if(diamonds < 500){
+
+alert("ダイヤが足りない！");
+
+return;
+
+}
+
+diamonds -= 500;
+
+document.getElementById("diamondCount").innerHTML = diamonds;
+
+alert("10連ガチャ！！🔥");
+
+}
 
 function pullGacha(){
 
