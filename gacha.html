@@ -333,6 +333,9 @@ function pullGacha(){
 const flash = document.getElementById("flash");
 const result = document.getElementById("result");
 
+document.body.style.animation = "";
+result.style.animation = "";
+
 flash.classList.add("active");
 
 setTimeout(()=>{
@@ -362,7 +365,14 @@ NEON DRAGON
 }
 else if(rand < 0.20){
 
+document.body.style.background =
+"linear-gradient(#3a0000,#ff0000)";
+
+result.style.animation =
+"shake 0.5s infinite";
+
 result.innerHTML = `
+
 <div class="result-rank sr">
 ⚡ SR ⚡
 </div>
