@@ -223,18 +223,23 @@ opacity:1;
 @keyframes rainbowFlash{
 
 0%{
-filter:hue-rotate(0deg);
-transform:scale(1);
+background:#ff0000;
+}
+
+25%{
+background:#00ffee;
 }
 
 50%{
-filter:hue-rotate(180deg);
-transform:scale(1.05);
+background:#ff00ff;
+}
+
+75%{
+background:#ffee00;
 }
 
 100%{
-filter:hue-rotate(360deg);
-transform:scale(1);
+background:#ff0000;
 }
 
 }
@@ -381,6 +386,8 @@ const flash = document.getElementById("flash");
 const result = document.getElementById("result");
 
 document.body.style.animation = "";
+document.body.style.background = "#000";
+
 result.style.animation = "";
 
 flash.classList.add("active");
