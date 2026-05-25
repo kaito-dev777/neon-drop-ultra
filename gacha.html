@@ -327,8 +327,6 @@ SSR確率 3%
 🎰 ガチャを引く
 </button>
 
-<div class="result" id="result">
-
 <div id="slotArea">
 
 <div class="slot" id="slot1">?</div>
@@ -337,7 +335,7 @@ SSR確率 3%
 
 </div>
 
-</div>
+<div class="result" id="result">
 
 <div class="result-rank">
 READY
@@ -411,8 +409,8 @@ marks[Math.floor(Math.random()*marks.length)];
 },100);
 
 setTimeout(()=>{
+
 clearInterval(spin);
-},1500);
 
 const rand = Math.random();
 
@@ -422,24 +420,12 @@ slot1.innerHTML = "SSR";
 slot2.innerHTML = "SSR";
 slot3.innerHTML = "SSR";
 
-document.body.style.animation =
-"rainbowFlash 1s infinite";
-
-result.style.animation =
-"shake 0.4s infinite";
-
 }
 else if(rand < 0.20){
 
 slot1.innerHTML = "SR";
 slot2.innerHTML = "SR";
 slot3.innerHTML = "SR";
-
-document.body.style.background =
-"linear-gradient(#3a0000,#ff0000)";
-
-result.style.animation =
-"shake 0.5s infinite";
 
 }
 else{
@@ -450,197 +436,4 @@ slot3.innerHTML = "R";
 
 }
 
-}
-
-},100);
-
-document.body.style.animation =
-"rainbowFlash 1s infinite";
-
-result.style.animation =
-"shake 0.4s infinite";
-
-result.innerHTML = `
-<div class="result-rank ssr">
-✨ SSR ✨
-</div>
-
-<div class="result-name">
-NEON DRAGON
-</div>
-`;
-
-}
-else if(rand < 0.20){
-
-document.body.style.background =
-"linear-gradient(#3a0000,#ff0000)";
-
-result.style.animation =
-"shake 0.5s infinite";
-
-result.innerHTML = `
-
-<div class="result-rank sr">
-⚡ SR ⚡
-</div>
-
-<div class="result-name">
-CYBER PHOENIX
-</div>
-`;
-
-}
-else{
-
-result.innerHTML = `
-<div class="result-rank r">
-🔹 R 🔹
-</div>
-
-<div class="result-name">
-PULSE UNIT
-</div>
-`;
-
-}
-
-}
-
-</script>
-function pullGacha(){
-
-const flash = document.getElementById("flash");
-const result = document.getElementById("result");
-
-flash.classList.add("active");
-
-setTimeout(()=>{
-
-flash.classList.remove("active");
-
-const rand = Math.random();
-
-
-// SSR
-if(rand < 0.05){
-
-document.body.style.background =
-"linear-gradient(45deg,
-#ff0000,
-#ff9900,
-#ffee00,
-#00ffff,
-#ff00ff)";
-
-result.innerHTML += `
-<div style="
-font-size:90px;
-animation:pop 0.5s;
-filter:drop-shadow(0 0 20px gold);
-">
-🌈
-</div>
-
-<div style="
-font-size:54px;
-font-weight:bold;
-background:
-linear-gradient(90deg,
-gold,
-white,
-gold,
-orange);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-text-shadow:
-0 0 20px gold,
-0 0 40px yellow;
-">
-✨ SSR ✨
-</div>
-
-<div style="
-font-size:38px;
-margin-top:20px;
-color:white;
-text-shadow:0 0 20px cyan;
-">
-👑 VOID EMPEROR
-</div>
-
-<div style="
-margin-top:14px;
-font-size:22px;
-color:#ffe066;
-">
-ULTRA LEGEND
-</div>
-`;
-
-
-// SR
-}else if(rand < 0.25){
-
-document.body.style.animation =
-"shake 0.5s infinite";
-
-document.body.style.background =
-"linear-gradient(#3a0000,#ff0000)";
-
-result.innerHTML += `
-<div style="
-font-size:70px;
-animation:pop 0.5s;
-">
-🔥
-</div>
-
-<div style="
-font-size:44px;
-font-weight:bold;
-color:#ff4444;
-text-shadow:0 0 25px red;
-">
-SR!!
-</div>
-
-<div style="
-font-size:34px;
-margin-top:20px;
-color:white;
-">
-⚡ CYBER DRAGON
-</div>
-`;
-
-
-// R
-}else{
-
-document.body.style.background =
-"radial-gradient(circle at top,#2d0059,#070014 70%)";
-
-result.innerHTML += `
-<div style="font-size:60px;">⭐</div>
-
-<div style="
-font-size:36px;
-font-weight:bold;
-">
-R
-</div>
-
-<div style="font-size:28px;">
-🐱 NEON CAT
-</div>
-`;
-
-}
-
-},800);
-
-}
-
-</body>
-</html>
+},1500);
