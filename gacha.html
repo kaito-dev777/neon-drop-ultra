@@ -218,6 +218,34 @@ transform:scale(1);
 opacity:1;
 }
 }
+@keyframes rainbowFlash{
+
+0%{
+filter:hue-rotate(0deg);
+transform:scale(1);
+}
+
+50%{
+filter:hue-rotate(180deg);
+transform:scale(1.05);
+}
+
+100%{
+filter:hue-rotate(360deg);
+transform:scale(1);
+}
+
+}
+
+@keyframes shake{
+
+0%{transform:translateX(0);}
+25%{transform:translateX(-6px);}
+50%{transform:translateX(6px);}
+75%{transform:translateX(-6px);}
+100%{transform:translateX(0);}
+
+}
 </style>
 </head>
 
@@ -312,6 +340,12 @@ flash.classList.remove("active");
 const rand = Math.random();
 
 if(rand < 0.03){
+
+document.body.style.animation =
+"rainbowFlash 1s infinite";
+
+result.style.animation =
+"shake 0.4s infinite";
 
 result.innerHTML = `
 <div class="result-rank ssr">
@@ -427,6 +461,9 @@ ULTRA LEGEND
 
 // SR
 }else if(rand < 0.25){
+
+document.body.style.animation =
+"shake 0.5s infinite";
 
 document.body.style.background =
 "linear-gradient(#3a0000,#ff0000)";
