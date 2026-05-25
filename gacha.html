@@ -308,6 +308,10 @@ GACHA
 SSR確率 3%
 </div>
 
+<div class="diamond-box">
+💎 <span id="diamondCount">500</span>
+</div>
+
 <div class="machine">
 
 <div class="core"></div>
@@ -368,7 +372,21 @@ READY
 
 <script>
 
+let diamonds = 500;
+
 function pullGacha(){
+
+if(diamonds < 50){
+
+alert("ダイヤが足りない！");
+
+return;
+
+}
+
+diamonds -= 50;
+
+document.getElementById("diamondCount").innerHTML = diamonds;
 
 const flash = document.getElementById("flash");
 const result = document.getElementById("result");
