@@ -6,54 +6,128 @@
 <title>NEON DROP ULTRA - GAME</title>
 
 <style>
-
+*{box-sizing:border-box}
 body{
-margin:0;
-background:#070014;
-overflow:hidden;
-font-family:sans-serif;
-color:white;
+  margin:0;
+  background:radial-gradient(circle at top,#26004d,#05000c 70%);
+  color:white;
+  font-family:sans-serif;
+  overflow:hidden;
 }
-
 #game{
-position:relative;
-width:100vw;
-height:100vh;
-background:
-radial-gradient(circle at top,#2d0b59,#070014);
-overflow:hidden;
+  width:100vw;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:18px;
 }
-
-.player{
-position:absolute;
-bottom:40px;
-left:50%;
-transform:translateX(-50%);
-width:70px;
-height:70px;
-border-radius:20px;
-background:cyan;
-box-shadow:0 0 30px cyan;
+.top{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:bold;
 }
-
-.enemy{
-position:absolute;
-width:50px;
-height:50px;
-border-radius:14px;
-background:#ff00ff;
-box-shadow:0 0 20px #ff00ff;
-}
-
 .score{
-position:absolute;
-top:20px;
-left:20px;
-font-size:32px;
-font-weight:bold;
-text-shadow:0 0 15px cyan;
+  font-size:28px;
+  text-shadow:0 0 15px cyan;
 }
-
+.back{
+  border:none;
+  border-radius:14px;
+  padding:10px 16px;
+  background:#111827;
+  color:white;
+  font-weight:bold;
+}
+.board{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:repeat(10,1fr);
+  grid-template-rows:repeat(18,1fr);
+  gap:3px;
+  width:min(92vw,360px);
+  height:min(120vw,640px);
+  max-height:72vh;
+  padding:8px;
+  border-radius:20px;
+  background:rgba(0,0,0,.35);
+  border:2px solid rgba(0,229,255,.5);
+  box-shadow:0 0 30px rgba(0,229,255,.35);
+}
+.cell{
+  border-radius:6px;
+  background:rgba(255,255,255,.04);
+}
+.filled{
+  box-shadow:0 0 12px currentColor, inset 0 0 8px rgba(255,255,255,.4);
+}
+.controls{
+  width:min(92vw,360px);
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.controls button{
+  border:none;
+  border-radius:18px;
+  padding:16px;
+  font-size:24px;
+  font-weight:bold;
+  color:white;
+  background:linear-gradient(90deg,#ff00ff,#00d4ff);
+  box-shadow:0 0 18px rgba(255,0,255,.4);
+}
+.notice{
+  margin-top:10px;
+  color:#d8c8ff;
+  font-size:14px;
+}
+.gameover{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  background:rgba(0,0,0,.78);
+  z-index:20;
+}
+.gameover h1{
+  font-size:48px;
+  color:#ff00ff;
+  text-shadow:0 0 25px #ff00ff;
+}
+.gameover button{
+  border:none;
+  border-radius:20px;
+  padding:16px 34px;
+  font-size:22px;
+  font-weight:bold;
+  background:cyan;
+}
+.combo{
+  position:fixed;
+  top:42%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:38px;
+  font-weight:bold;
+  color:#ffd54a;
+  text-shadow:0 0 25px #ffd54a;
+  opacity:0;
+  pointer-events:none;
+}
+.combo.show{
+  animation:pop .8s ease;
+}
+@keyframes pop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+  40%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}
+  100%{opacity:0;transform:translate(-50%,-70%) scale(1)}
+}
 </style>
 </head>
 
@@ -61,84 +135,258 @@ text-shadow:0 0 15px cyan;
 
 <div id="game">
 
-<div class="score">
-SCORE:
-<span id="score">0</span>
+  <div class="top">
+    <button class="back" onclick="location.href='index.html'">← ホーム</button>
+    <div class="score">SCORE: <span id="score">0</span></div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div class="controls">
+    <button onclick="move(-1)">←</button>
+    <button onclick="rotate()">↻</button>
+    <button onclick="move(1)">→</button>
+  </div>
+
+  <div class="controls">
+    <button onclick="drop()">↓</button>
+    <button onclick="hardDrop()">⚡</button>
+    <button onclick="start()">▶</button>
+  </div>
+
+  <div class="notice">ブロックを動かしてラインを消そう🔥</div>
+
 </div>
 
-<div class="player" id="player"></div>
+<div class="combo" id="combo">LINE CLEAR!</div>
 
+<div class="gameover" id="gameover">
+  <h1>GAME OVER</h1>
+  <button onclick="restart()">もう一回</button>
 </div>
 
 <script>
+const COLS = 10;
+const ROWS = 18;
 
-const game = document.getElementById("game");
-const player = document.getElementById("player");
-const scoreText = document.getElementById("score");
+const colors = [
+  "#00e5ff",
+  "#ff00ff",
+  "#ffd54a",
+  "#39ff88",
+  "#8b5cff",
+  "#ff4b4b"
+];
 
-let playerX = window.innerWidth / 2;
+const shapes = [
+  [[1,1,1,1]],
+  [[1,1],[1,1]],
+  [[0,1,0],[1,1,1]],
+  [[1,0,0],[1,1,1]],
+  [[0,0,1],[1,1,1]],
+  [[1,1,0],[0,1,1]],
+  [[0,1,1],[1,1,0]]
+];
+
+let board = [];
+let current;
 let score = 0;
+let timer;
+let playing = false;
 
-document.addEventListener("touchmove",(e)=>{
+const boardEl = document.getElementById("board");
+const scoreEl = document.getElementById("score");
+const gameoverEl = document.getElementById("gameover");
+const comboEl = document.getElementById("combo");
 
-playerX = e.touches[0].clientX;
-player.style.left = playerX + "px";
+function init(){
+  board = Array.from({length:ROWS},()=>Array(COLS).fill(null));
+  score = 0;
+  scoreEl.innerText = score;
+  gameoverEl.style.display = "none";
+  spawn();
+  draw();
+}
 
+function spawn(){
+  const shape = JSON.parse(JSON.stringify(shapes[Math.floor(Math.random()*shapes.length)]));
+  current = {
+    shape,
+    x:3,
+    y:0,
+    color:colors[Math.floor(Math.random()*colors.length)]
+  };
+
+  if(collide(current.x,current.y,current.shape)){
+    playing=false;
+    clearInterval(timer);
+    gameoverEl.style.display="flex";
+  }
+}
+
+function draw(){
+  boardEl.innerHTML = "";
+
+  const temp = board.map(row=>row.slice());
+
+  current.shape.forEach((row,y)=>{
+    row.forEach((v,x)=>{
+      if(v){
+        const py = current.y + y;
+        const px = current.x + x;
+        if(py>=0 && py<ROWS && px>=0 && px<COLS){
+          temp[py][px] = current.color;
+        }
+      }
+    });
+  });
+
+  for(let y=0;y<ROWS;y++){
+    for(let x=0;x<COLS;x++){
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      if(temp[y][x]){
+        cell.classList.add("filled");
+        cell.style.background = temp[y][x];
+        cell.style.color = temp[y][x];
+      }
+      boardEl.appendChild(cell);
+    }
+  }
+}
+
+function collide(nx,ny,shape){
+  for(let y=0;y<shape.length;y++){
+    for(let x=0;x<shape[y].length;x++){
+      if(shape[y][x]){
+        const px = nx + x;
+        const py = ny + y;
+
+        if(px < 0 || px >= COLS || py >= ROWS) return true;
+        if(py >= 0 && board[py][px]) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function merge(){
+  current.shape.forEach((row,y)=>{
+    row.forEach((v,x)=>{
+      if(v){
+        const py = current.y + y;
+        const px = current.x + x;
+        if(py>=0) board[py][px] = current.color;
+      }
+    });
+  });
+}
+
+function clearLines(){
+  let lines = 0;
+
+  for(let y=ROWS-1;y>=0;y--){
+    if(board[y].every(cell=>cell)){
+      board.splice(y,1);
+      board.unshift(Array(COLS).fill(null));
+      lines++;
+      y++;
+    }
+  }
+
+  if(lines > 0){
+    score += lines * 1000;
+    scoreEl.innerText = score;
+    showCombo(lines + " LINE CLEAR!");
+  }
+}
+
+function showCombo(text){
+  comboEl.innerText = text;
+  comboEl.classList.remove("show");
+  void comboEl.offsetWidth;
+  comboEl.classList.add("show");
+}
+
+function tick(){
+  if(!playing)return;
+
+  if(!collide(current.x,current.y+1,current.shape)){
+    current.y++;
+  }else{
+    merge();
+    clearLines();
+    spawn();
+  }
+
+  draw();
+}
+
+function move(dir){
+  if(!playing)return;
+  if(!collide(current.x+dir,current.y,current.shape)){
+    current.x += dir;
+    draw();
+  }
+}
+
+function drop(){
+  if(!playing)return;
+  tick();
+}
+
+function hardDrop(){
+  if(!playing)return;
+  while(!collide(current.x,current.y+1,current.shape)){
+    current.y++;
+  }
+  tick();
+}
+
+function rotate(){
+  if(!playing)return;
+
+  const rotated = current.shape[0].map((_,i)=>
+    current.shape.map(row=>row[i]).reverse()
+  );
+
+  if(!collide(current.x,current.y,rotated)){
+    current.shape = rotated;
+    draw();
+  }
+}
+
+function start(){
+  if(playing)return;
+  playing = true;
+  clearInterval(timer);
+  timer = setInterval(tick,600);
+}
+
+function restart(){
+  clearInterval(timer);
+  playing = false;
+  init();
+}
+
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="ArrowLeft") move(-1);
+  if(e.key==="ArrowRight") move(1);
+  if(e.key==="ArrowUp") rotate();
+  if(e.key==="ArrowDown") drop();
 });
 
-function createEnemy(){
+let touchStartX = 0;
+document.addEventListener("touchstart",(e)=>{
+  touchStartX = e.touches[0].clientX;
+});
+document.addEventListener("touchend",(e)=>{
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if(dx > 40) move(1);
+  if(dx < -40) move(-1);
+});
 
-const enemy = document.createElement("div");
-enemy.classList.add("enemy");
-
-let x = Math.random() * (window.innerWidth - 50);
-
-enemy.style.left = x + "px";
-enemy.style.top = "-60px";
-
-game.appendChild(enemy);
-
-let y = -60;
-
-const fall = setInterval(()=>{
-
-y += 6;
-enemy.style.top = y + "px";
-
-const playerRect = player.getBoundingClientRect();
-const enemyRect = enemy.getBoundingClientRect();
-
-if(
-enemyRect.left < playerRect.right &&
-enemyRect.right > playerRect.left &&
-enemyRect.top < playerRect.bottom &&
-enemyRect.bottom > playerRect.top
-){
-
-alert("GAME OVER");
-
-location.reload();
-
-}
-
-if(y > window.innerHeight){
-
-clearInterval(fall);
-
-enemy.remove();
-
-score++;
-
-scoreText.innerText = score;
-
-}
-
-},20);
-
-}
-
-setInterval(createEnemy,700);
-
+init();
 </script>
 
 </body>
