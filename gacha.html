@@ -141,16 +141,16 @@ margin-top:20px;
 
 #tenResult{
 display:grid;
-grid-template-columns:repeat(5,60px);
+grid-template-columns:repeat(3,80px);
 justify-content:center;
 gap:10px;
 margin-top:30px;
 }
 
 #tenResult .slot{
-width:60px;
-height:60px;
-font-size:28px;
+width:80px;
+height:80px;
+font-size:16px;
 margin:auto;
 }
 
@@ -183,6 +183,16 @@ font-weight:bold;
 
 .ssr{
 color:#ffd54a;
+background:linear-gradient(180deg,#3a2500,#120800);
+border:2px solid gold;
+box-shadow:
+0 0 15px #ffd700,
+0 0 30px #ffae00;
+}
+
+.ssr img{
+box-shadow:
+0 0 20px gold;
 }
 
 .sr{
@@ -407,6 +417,29 @@ READY
 
 let diamonds = 500;
 
+const characters = {
+
+R: [
+{name:"黒猫", img:"blackcat.png"},
+{name:"白猫", img:"whitecat.png"},
+{name:"騎士", img:"knight.png"},
+{name:"忍者", img:"ninja.png"},
+{name:"魔法使い", img:"mage.png"}
+],
+
+SR: [
+{name:"天使", img:"angel.png"},
+{name:"アーサー", img:"arthur.png"},
+{name:"悪魔", img:"devil.png"}
+],
+
+SSR: [
+{name:"神龍", img:"goddragon.png"},
+{name:"白龍", img:"whitedragon.png"}
+]
+
+};
+
 function pull10Gacha(){
 
 if(diamonds < 500){
@@ -435,13 +468,19 @@ let rank = "R";
 if(rand < 0.03){
 rank = "SSR";
 }
-else if(rand < 0.5){
+else if(rand < 0.20){
 rank = "SR";
 }
 
+const list = characters[rank];
+
+const chara =
+list[Math.floor(Math.random() * list.length)];
+
 tenResult.innerHTML += `
-<div class="slot">
-${rank}
+<div class="slot ${rank.toLowerCase()}">
+<img src="${chara.img}">
+<div>${chara.name}</div>
 </div>
 `;
 
