@@ -304,6 +304,23 @@ object-fit:cover;
 object-position:center 20%;
 }
 
+@keyframes goldFlash{
+0%{
+background:#120022;
+}
+50%{
+background:#3a2500;
+box-shadow:0 0 40px gold;
+}
+100%{
+background:#120022;
+}
+}
+
+.ssr-effect{
+animation:goldFlash 0.8s ease;
+}
+
 @keyframes slotGlow{
 0%{
 transform:scale(1);
@@ -486,7 +503,7 @@ const chara =
 list[Math.floor(Math.random() * list.length)];
 
 tenResult.innerHTML += `
-<div class="slot ${rank.toLowerCase()}">
+<div class="slot ${rank.toLowerCase()} ${rank === 'SSR' ? 'ssr-effect' : ''}">
 <img src="${chara.img}">
 </div>
 `;
