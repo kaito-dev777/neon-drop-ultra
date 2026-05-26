@@ -325,12 +325,15 @@ transform:rotateY(0deg);
 }
 
 .opening{
+opacity:1;
 animation:cardOpen 0.5s ease;
 }
 
 .slot{
 opacity:0;
 animation-fill-mode:forwards;
+animation-name:cardOpen;
+animation-duration:0.5s;
 }
 
 .show1{animation-delay:0.1s;}
